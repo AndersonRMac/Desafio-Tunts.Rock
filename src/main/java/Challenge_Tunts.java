@@ -11,6 +11,7 @@ import com.google.api.client.util.Strings;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,25 +65,36 @@ public class Challenge_Tunts {
 
     public static void main(String[] args) throws IOException, GeneralSecurityException  {
         sheetsService = getSheetsService();
+        String range = "engenharia_de_software!A4:F27";
 
-        //range for searching values
-        //put the page name, not the file name.
-        String range = "engenharia_de_software!A3:F27";
+         ValueRange appendBody = new ValueRange();
 
-        ValueRange response = sheetsService.spreadsheets().values()
-                .get(SPREADSHEET_ID, range)
-                .execute();
 
-        List<List<Object>> values = response.getValues();
-
-        if (values == null || values.isEmpty()){
-            System.out.println("No Data Found!");
-        }else{
-            for (List row : values){
-                System.out.printf("%s %s from %s\n", row.get(5), row.get(4), row.get(1));
-            }
-        }
     }
 }
 
 
+
+//    ValueRange response = sheetsService.spreadsheets().values()
+//            .get(SPREADSHEET_ID, range)
+//            .execute();
+//
+//    List<List<Object>> values = response.getValues();
+//
+//        if (values == null || values.isEmpty()){
+//                System.out.println("No Data Found!");
+//                }else{
+//                for (List row : values){
+//                System.out.printf("%s %s from %s\n" , row.get(0), row.get(1),row.get(2));
+//                }
+//                }
+
+
+//.setValues(Arrays.asList(Arrays.asList("Média")));
+//
+//        AppendValuesResponse appendResults = sheetsService.spreadsheets().values()
+//        .append(SPREADSHEET_ID,"engenharia_de_software", appendBody)
+//        .setValueInputOption("USER_ENTERED")
+//        .setInsertDataOption("INSERT_ROWS")
+//        .setIncludeValuesInResponse(true)
+//        .execute();

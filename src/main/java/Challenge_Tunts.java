@@ -27,6 +27,7 @@ public class Challenge_Tunts {
     private static Credential authorize() throws IOException, GeneralSecurityException{
 
 
+        return null;
     }
 }
 

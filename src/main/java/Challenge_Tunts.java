@@ -4,24 +4,21 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.Strings;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Challenge_Tunts {
     private static Sheets sheetsService;
@@ -30,6 +27,8 @@ public class Challenge_Tunts {
 
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+
+    public static Dados_Operations operations = new Dados_Operations();
 
 
     private static Credential authorize() throws IOException, GeneralSecurityException{
@@ -67,27 +66,50 @@ public class Challenge_Tunts {
         sheetsService = getSheetsService();
         String range = "engenharia_de_software!A4:F27";
 
-         ValueRange appendBody = new ValueRange();
+            ValueRange response = sheetsService.spreadsheets().values()
+            .get(SPREADSHEET_ID, range)
+            .execute();
 
+    List<List<Object>> values = response.getValues();
+
+        if (values == null || values.isEmpty()){
+            System.out.println("No Data Found!");
+            }else {
+                for (List row : values){
+                    DecimalFormat format = new DecimalFormat("0.0");
+
+                    Double mediaCalc =(Double.parseDouble(String.valueOf(row.get(3))) +
+                                   Double.parseDouble(String.valueOf(row.get(4))) +
+                                   Double.parseDouble(String.valueOf(row.get(5)))) / 3;
+
+                    List<Double> medias = new ArrayList<>();
+                        medias.add(mediaCalc);
+                    System.out.println(format.format(mediaCalc));
+
+                for (int i = 0; i < medias.toArray().length; i++) {
+                    if (medias.get(i) >= 7 ) {
+
+                        System.out.println("Aprovado");
+                    } else if (medias.get(i) < 5) {
+
+                        System.out.println("Reprovado!!");
+                    } else if (medias.get(i) >= 5 || medias.get(i) <= 7  ) {
+
+                        System.out.println("Exame Final!!");
+                    }
+
+
+                }
+            }
+
+        }
 
     }
 }
 
 
 
-//    ValueRange response = sheetsService.spreadsheets().values()
-//            .get(SPREADSHEET_ID, range)
-//            .execute();
-//
-//    List<List<Object>> values = response.getValues();
-//
-//        if (values == null || values.isEmpty()){
-//                System.out.println("No Data Found!");
-//                }else{
-//                for (List row : values){
-//                System.out.printf("%s %s from %s\n" , row.get(0), row.get(1),row.get(2));
-//                }
-//                }
+
 
 
 //.setValues(Arrays.asList(Arrays.asList("Média")));

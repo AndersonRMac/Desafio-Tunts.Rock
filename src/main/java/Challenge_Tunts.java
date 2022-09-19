@@ -70,7 +70,7 @@ public class Challenge_Tunts extends Thread {
                 .execute();
 
         List<List<Object>> values = response.getValues();
-        List<String> medias = new ArrayList<>();
+        List<Double> medias = new ArrayList<>();
 
 
         if (values == null || values.isEmpty()) {
@@ -80,32 +80,37 @@ public class Challenge_Tunts extends Thread {
                 DecimalFormat format = new DecimalFormat("0.0");
 
                 Double mediaCalc = (Double.parseDouble(String.valueOf(row.get(3))) +
-                                    Double.parseDouble(row.get(4).toString()) +
+                                    Double.parseDouble(String.valueOf(row.get(4))) +
                                     Double.parseDouble(String.valueOf(row.get(5)))) / 3;
 
 
-                medias.add(format.format(mediaCalc));
+                medias.add(mediaCalc);
 
 
             }
 
         }
+        int i = 0;
+        ValueRange body = new ValueRange()
+                .setValues(Arrays.asList(Arrays.asList(medias.get(i++))));
 
-            int i = 0;
-            sheetsService = getSheetsService();
-            ValueRange body = new ValueRange()
-                    .setValues(Arrays.asList(Arrays.asList(medias.get(i++))));
 
-            sheetsService.spreadsheets()
-                    .values()
-                    .append(SPREADSHEET_ID, range2, body)
-                    .setValueInputOption("USER_ENTERED")
-                    .execute();
+        if (values == null || values.isEmpty()) {
+            for(List row : values){
 
+                sheetsService.spreadsheets()
+                        .values()
+                        .append(SPREADSHEET_ID, range2,body)
+                        .execute();
+
+
+                }
+
+            }
+        }
 
     }
 
-}
 
 
 
